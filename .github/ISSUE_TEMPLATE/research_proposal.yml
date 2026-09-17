@@ -1,0 +1,38 @@
+name: Benchmark proposal
+description: Propose a dataset, backend, metric, or confirmatory experiment.
+title: "[proposal] "
+labels: [research]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Scientific question
+      description: State the claim this experiment could support or falsify.
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: Comparison contract
+      description: Explain why every model receives equivalent inputs and exposes comparable outputs.
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: Data, license, and contamination risk
+    validations:
+      required: true
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Primary metric, controls, and failure policy
+    validations:
+      required: true
+  - type: textarea
+    id: budget
+    attributes:
+      label: Runtime and cost budget
+      description: Include expected samples, hardware/API calls, wall time, and monetary cost.
+    validations:
+      required: true

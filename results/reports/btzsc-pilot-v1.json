@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "benchmark_version": "0.1.0",
+  "experiment_id": "btzsc-pilot-v1",
+  "protocol_revision": "pilot-v1-preregistered",
+  "seed": 20260917,
+  "sample_count_per_dataset": 100,
+  "artifacts": {
+    "config_sha256": "bb9172b7b8d92331ab166f13642ecc8aac4d447f111a0daf3285ab31439c05ef",
+    "manifest_sha256": "ec064c52b149de458344cd4b4a44c158460f30b3bbb7fe8b2e7ec72d0abf3ba5",
+    "gliner_predictions_sha256": "4ea0a71ffe7e157e154b9b667c86dbc515bb676d000ea341ac3db4fbbdfb1ae8",
+    "jev_predictions_sha256": "fc2cffee4ffe9c1870beee21f40805b1209e1c3b4f5ae8183d2e4450a3ec2216"
+  },
+  "dataset": {
+    "repository": "btzsc/btzsc",
+    "revision": "fef2a2ac62b69c58670047dddf045c53d7c3cb5e"
+  },
+  "models": {
+    "gliner": "fastino/gliner2.5-multi-v1@235cf92d6d4318da9bfca0d08975c8fa7250d13b",
+    "jev": "jev-1.13.0"
+  },
+  "metric_config": {
+    "bootstrap_resamples": 2000,
+    "ece_bins": 10,
+    "error_budget": 0.05
+  },
+  "results": {
+    "gliner": {
+      "agnews": {
+        "n": 100,
+        "valid": 100,
+        "failures": 0,
+        "accuracy": 0.7,
+        "macro_f1": 0.6588522320524076,
+        "brier": 0.4125648583801364,
+        "nll": 0.7415514725789066,
+        "ece": 0.12434131756913192,
+        "mean_confidence": 0.6950767940504561,
+        "true_label_zero_rate": 0.0,
+        "coverage_at_error_budget": 0.24,
+        "risk_at_selected_coverage": 0.041666666666666664,
+        "confidence_threshold_at_error_budget": 0.933371912198645,
+        "latency_p50_seconds": 0.04494062496814877,
+        "latency_p95_seconds": 0.053064177697524424
+      },
+      "banking77": {
+        "n": 100,
+        "valid": 100,
+        "failures": 0,
+        "accuracy": 0.61,
+        "macro_f1": 0.569268077601411,
+        "brier": 0.5208642425604206,
+        "nll": 1.4444025554808286,
+        "ece": 0.06166169636763499,
+        "mean_confidence": 0.5866089925633868,
+        "true_label_zero_rate": 0.0,
+        "coverage_at_error_budget": 0.27,
+        "risk_at_selected_coverage": 0.037037037037037035,
+        "confidence_threshold_at_error_budget": 0.826138964711391,
+        "latency_p50_seconds": 0.2954888330423273,
+        "latency_p95_seconds": 0.3616944021661766
+      },
+      "emotiondair": {
+        "n": 100,
+        "valid": 100,
+        "failures": 0,
+        "accuracy": 0.44,
+        "macro_f1": 0.4070167592505414,
+        "brier": 0.6679228889071616,
+        "nll": 1.3812613090273118,
+        "ece": 0.11652693729708664,
+        "mean_confidence": 0.43796102805368714,
+        "true_label_zero_rate": 0.0,
+        "coverage_at_error_budget": 0.02,
+        "risk_at_selected_coverage": 0.0,
+        "confidence_threshold_at_error_budget": 0.8621659289884616,
+        "latency_p50_seconds": 0.04330835404107347,
+        "latency_p95_seconds": 0.0477334919909481
+      }
+    },
+    "jev": {
+      "agnews": {
+        "n": 100,
+        "valid": 100,
+        "failures": 0,
+        "accuracy": 0.91,
+        "macro_f1": 0.9046162752649198,
+        "brier": 0.145914,
+        "nll": 0.4945122562924855,
+        "ece": 0.06389999999999989,
+        "mean_confidence": 0.9592999999999999,
+        "true_label_zero_rate": 0.01,
+        "coverage_at_error_budget": 0.83,
+        "risk_at_selected_coverage": 0.04819277108433735,
+        "confidence_threshold_at_error_budget": 0.94,
+        "latency_p50_seconds": 0.2558936455170624,
+        "latency_p95_seconds": 0.3322682707919739,
+        "input_tokens_total": 43678
+      },
+      "banking77": {
+        "n": 100,
+        "valid": 100,
+        "failures": 0,
+        "accuracy": 0.87,
+        "macro_f1": 0.8574074074074074,
+        "brier": 0.17912525885113767,
+        "nll": 1.064536146640438,
+        "ece": 0.053593939393939194,
+        "mean_confidence": 0.9099939393939394,
+        "true_label_zero_rate": 0.03,
+        "coverage_at_error_budget": 0.86,
+        "risk_at_selected_coverage": 0.046511627906976744,
+        "confidence_threshold_at_error_budget": 0.78,
+        "latency_p50_seconds": 0.2463563960045576,
+        "latency_p95_seconds": 0.3342410829267464,
+        "input_tokens_total": 228262
+      },
+      "emotiondair": {
+        "n": 100,
+        "valid": 100,
+        "failures": 0,
+        "accuracy": 0.48,
+        "macro_f1": 0.4792068046730887,
+        "brier": 0.8462892588511376,
+        "nll": 5.5875150987393845,
+        "ece": 0.3511939393939393,
+        "mean_confidence": 0.8189939393939393,
+        "true_label_zero_rate": 0.16,
+        "coverage_at_error_budget": 0.0,
+        "risk_at_selected_coverage": null,
+        "confidence_threshold_at_error_budget": null,
+        "latency_p50_seconds": 0.23634893749840558,
+        "latency_p95_seconds": 0.28941686697071417,
+        "input_tokens_total": 44921
+      }
+    }
+  },
+  "paired_comparison_jev_minus_gliner": {
+    "agnews": {
+      "accuracy": {"difference": 0.21000000000000008, "ci95_low": 0.13, "ci95_high": 0.29000000000000004},
+      "macro_f1": {"difference": 0.24576404321251222, "ci95_low": 0.15046302801081363, "ci95_high": 0.3453305288458478},
+      "brier": {"difference": -0.26665085838013647, "ci95_low": -0.3631406695963337, "ci95_high": -0.1711285032224669},
+      "nll": {"difference": -0.2470392162864209, "ci95_low": -0.6232410935786119, "ci95_high": 0.3440436192542647}
+    },
+    "banking77": {
+      "accuracy": {"difference": 0.26, "ci95_low": 0.21999999999999997, "ci95_high": 0.30000000000000004},
+      "macro_f1": {"difference": 0.28813932980599644, "ci95_low": 0.25155753968253963, "ci95_high": 0.3266335978835978},
+      "brier": {"difference": -0.341738983709283, "ci95_low": -0.38973855761185533, "ci95_high": -0.29645345812258134},
+      "nll": {"difference": -0.3798664088403909, "ci95_low": -0.9465516430669015, "ci95_high": 0.16947520303423932}
+    },
+    "emotiondair": {
+      "accuracy": {"difference": 0.03999999999999998, "ci95_low": -0.07, "ci95_high": 0.14999999999999997},
+      "macro_f1": {"difference": 0.07219004542254726, "ci95_low": -0.0406836193071656, "ci95_high": 0.18383003450210236},
+      "brier": {"difference": 0.17836636994397592, "ci95_low": 0.04141506875843589, "ci95_high": 0.314772117256066},
+      "nll": {"difference": 4.206253789712074, "ci95_low": 2.676894081697122, "ci95_high": 6.0325544771226856}
+    }
+  }
+}

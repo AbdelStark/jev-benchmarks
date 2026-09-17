@@ -1,4 +1,5 @@
 experiment_id: btzsc-pilot-v1
+protocol_revision: pilot-v1-preregistered
 seed: 20260917
 dataset:
   repository: btzsc/btzsc

@@ -1,7 +1,5 @@
 # BTZSC pilot v1: Jev vs GLiNER2.5
 
-Private evaluation. Not approved for public release or outreach.
-
 Run date: 17 September 2026. Protocol frozen at tag `pilot-v1-preregistered` before model
 inference. Jev resolved to `jev-1.13.0`; GLiNER used
 `fastino/gliner2.5-multi-v1@235cf92d6d4318da9bfca0d08975c8fa7250d13b` locally on an Apple
@@ -18,7 +16,7 @@ worse. The pilot therefore supports a task-dependent conclusion, not a universal
 | AG News | GLiNER2.5 | 0.700 | 0.659 | 0.413 | 0.742 | 0.124 | 0.240 | 44.9 ms local CPU |
 | AG News | Jev | **0.910** | **0.905** | **0.146** | **0.495** | **0.064** | **0.830** | 255.9 ms hosted |
 | Banking77/BTZSC | GLiNER2.5 | 0.610 | 0.569 | 0.521 | 1.444 | 0.062 | 0.270 | 295.5 ms local CPU |
-| Banking77/BTZSC | Jev | **0.870** | **0.857** | **0.179** | **1.064** | **0.054** | **0.870** | **246.4 ms hosted** |
+| Banking77/BTZSC | Jev | **0.870** | **0.857** | **0.179** | **1.064** | **0.054** | **0.860** | **246.4 ms hosted** |
 | DAIR Emotion | GLiNER2.5 | 0.440 | 0.407 | **0.668** | **1.381** | **0.117** | **0.020** | **43.3 ms local CPU** |
 | DAIR Emotion | Jev | 0.480 | 0.479 | 0.846 | 5.588 | 0.351 | 0.000 | 236.3 ms hosted |
 
@@ -73,9 +71,11 @@ The 5% error-budget coverage uses thresholds selected on the same pilot slice an
 confirmatory study must select thresholds on validation data, evaluate once on a disjoint held-out
 test set, increase sample sizes, and include more BTZSC datasets.
 
-## Local evidence hashes
+## Evidence artifacts
 
-Raw example text and per-example probabilities remain ignored locally under `results/runs/`.
+The aggregate metrics are also available as
+[`btzsc-pilot-v1.json`](btzsc-pilot-v1.json). Raw example text and per-example probabilities remain
+ignored under `results/runs/`.
 
 | Artifact | SHA-256 |
 | --- | --- |

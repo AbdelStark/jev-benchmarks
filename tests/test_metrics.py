@@ -57,3 +57,17 @@ def test_paired_bootstrap_reports_right_minus_left() -> None:
     result = paired_bootstrap(left, right, resamples=100, seed=7)
     assert result["accuracy"]["difference"] == 0.5
     assert result["brier"]["difference"] < 0
+
+
+def test_selective_coverage_never_splits_confidence_ties() -> None:
+    rows = [prediction(0, (0.9, 0.1)), prediction(1, (0.9, 0.1))]
+    scores = score_predictions(rows, error_budget=0.05)
+    assert scores["coverage_at_error_budget"] == 0.0
+    assert scores["confidence_threshold_at_error_budget"] is None
+
+
+def test_paired_bootstrap_rejects_mismatched_contracts() -> None:
+    left = [prediction(0, (0.6, 0.4))]
+    right = [Prediction(**{**prediction(1, (0.4, 0.6)).__dict__, "example_id": "0"})]
+    with pytest.raises(ValueError, match="contract mismatch"):
+        paired_bootstrap(left, right, resamples=5, seed=1)

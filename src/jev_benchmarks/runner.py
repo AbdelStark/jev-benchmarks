@@ -5,8 +5,6 @@ from dataclasses import replace
 from pathlib import Path
 
 from .adapters.base import Backend
-from .adapters.gliner import GLiNERBackend
-from .adapters.jev import JevBackend
 from .config import BenchmarkConfig
 from .data import prepare_manifest
 from .io import append_jsonl, read_jsonl
@@ -31,12 +29,30 @@ def _validate_prediction(prediction: Prediction) -> Prediction:
 
 
 def _make_backend(config: BenchmarkConfig, name: str) -> Backend:
+    if name not in {"gliner", "jev"}:
+        raise ValueError(f"unknown backend: {name}")
     model = config.raw["models"][name]
     if name == "gliner":
+        try:
+            from .adapters.gliner import GLiNERBackend
+        except ImportError as exc:
+            raise RuntimeError(
+                "the GLiNER backend requires the 'gliner' extra: "
+                "install with `pip install 'jev-benchmarks[gliner]'`"
+            ) from exc
+
         return GLiNERBackend(model["model_id"], model["revision"], model.get("device", "cpu"))
     if name == "jev":
+        try:
+            from .adapters.jev import JevBackend
+        except ImportError as exc:
+            raise RuntimeError(
+                "the Jev backend requires the 'jev' extra: "
+                "install with `pip install 'jev-benchmarks[jev]'`"
+            ) from exc
+
         return JevBackend(model["model_id"], model["question"])
-    raise ValueError(f"unknown backend: {name}")
+    raise AssertionError("unreachable")
 
 
 def run_backend(config: BenchmarkConfig, backend_name: str) -> Path:

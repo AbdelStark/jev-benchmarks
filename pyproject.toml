@@ -4,12 +4,44 @@ version = "0.1.0"
 description = "Reproducible evaluation infrastructure for Jev and decision-model baselines"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Abdelhamid Bakhta" }]
+keywords = [
+  "calibration",
+  "evaluation",
+  "machine-learning",
+  "selective-classification",
+  "zero-shot-classification",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
+  "numpy>=2.0,<3",
+  "pyyaml>=6.0,<7",
+]
+
+[project.optional-dependencies]
+data = ["datasets>=4.0,<5"]
+gliner = [
+  "gliner2[local]==2.0.0",
+  "protobuf>=6.0,<7",
+  "sentencepiece>=0.2,<1",
+]
+jev = ["typesafe-sdk==0.6.0"]
+benchmark = [
   "datasets>=4.0,<5",
   "gliner2[local]==2.0.0",
-  "numpy>=2.0,<3",
   "protobuf>=6.0,<7",
-  "pyyaml>=6.0,<7",
   "sentencepiece>=0.2,<1",
   "typesafe-sdk==0.6.0",
 ]
@@ -17,8 +49,14 @@ dependencies = [
 [project.scripts]
 jev-bench = "jev_benchmarks.cli:main"
 
+[project.urls]
+Documentation = "https://github.com/AbdelStark/jev-benchmarks#readme"
+Issues = "https://github.com/AbdelStark/jev-benchmarks/issues"
+Repository = "https://github.com/AbdelStark/jev-benchmarks"
+
 [dependency-groups]
 dev = [
+  "build>=1.3",
   "pyright>=1.1.405",
   "pytest>=8.4",
   "pytest-cov>=6.2",
@@ -42,5 +80,10 @@ typeCheckingMode = "standard"
 include = ["src", "tests"]
 
 [tool.pytest.ini_options]
-addopts = "-q --strict-markers"
+addopts = "-q --strict-markers --cov=jev_benchmarks --cov-report=term-missing"
 testpaths = ["tests"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_empty = true

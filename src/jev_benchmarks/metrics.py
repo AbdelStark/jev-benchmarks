@@ -43,15 +43,20 @@ def score_predictions(
             (confidence <= upper) if bin_index == ece_bins - 1 else (confidence < upper)
         )
         if np.any(mask):
-            confidence_gap = abs(
-                float(np.mean(confidence[mask])) - float(np.mean(correct[mask]))
-            )
+            confidence_gap = abs(float(np.mean(confidence[mask])) - float(np.mean(correct[mask])))
             ece += float(np.mean(mask)) * confidence_gap
-    order = np.argsort(-confidence)
-    cumulative_errors = np.cumsum(~correct[order])
-    accepted = np.arange(1, len(valid) + 1)
-    feasible = accepted[(cumulative_errors / accepted) <= error_budget]
-    coverage = 0.0 if len(feasible) == 0 else float(feasible.max() / len(valid))
+    selected_count = 0
+    selected_risk: float | None = None
+    selected_threshold: float | None = None
+    for threshold in sorted(set(confidence), reverse=True):
+        accepted = confidence >= threshold
+        risk = float(np.mean(~correct[accepted]))
+        count = int(np.sum(accepted))
+        if risk <= error_budget and count > selected_count:
+            selected_count = count
+            selected_risk = risk
+            selected_threshold = float(threshold)
+    coverage = selected_count / len(predictions)
     latencies = np.array([row.latency_seconds for row in valid])
     return {
         "n": len(predictions),
@@ -61,21 +66,19 @@ def score_predictions(
         "macro_f1": _macro_f1(all_targets, all_predicted, probabilities.shape[1]),
         "brier": float(np.mean(np.sum((probabilities - one_hot) ** 2, axis=1))),
         "nll": float(
-            -np.mean(
-                np.log(np.clip(probabilities[np.arange(len(valid)), targets], 1e-12, 1))
-            )
+            -np.mean(np.log(np.clip(probabilities[np.arange(len(valid)), targets], 1e-12, 1)))
         ),
         "ece": ece,
         "mean_confidence": float(np.mean(confidence)),
-        "true_label_zero_rate": float(
-            np.mean(probabilities[np.arange(len(valid)), targets] == 0)
-        ),
+        "true_label_zero_rate": float(np.mean(probabilities[np.arange(len(valid)), targets] == 0)),
         "renormalized_vectors": sum(
             row.probability_sum_raw is not None
             and not math.isclose(row.probability_sum_raw, 1.0, abs_tol=1e-9)
             for row in valid
         ),
-        "coverage_at_error_budget": coverage * len(valid) / len(predictions),
+        "coverage_at_error_budget": coverage,
+        "risk_at_selected_coverage": selected_risk,
+        "confidence_threshold_at_error_budget": selected_threshold,
         "latency_p50_seconds": float(np.quantile(latencies, 0.50)),
         "latency_p95_seconds": float(np.quantile(latencies, 0.95)),
         "input_tokens_total": sum(row.input_tokens or 0 for row in valid),
@@ -128,6 +131,9 @@ def paired_bootstrap(
         return {}
     left_rows = [left_by_id[example_id] for example_id in ids]
     right_rows = [right_by_id[example_id] for example_id in ids]
+    for left_row, right_row in zip(left_rows, right_rows, strict=True):
+        if left_row.target_index != right_row.target_index or left_row.labels != right_row.labels:
+            raise ValueError(f"paired example contract mismatch: {left_row.example_id}")
     metrics = ("accuracy", "macro_f1", "brier", "nll")
     observed_left = score_predictions(left_rows)
     observed_right = score_predictions(right_rows)

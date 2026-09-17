@@ -5,10 +5,8 @@ import random
 from collections import defaultdict
 from pathlib import Path
 
-from datasets import load_dataset
-
 from .config import BenchmarkConfig
-from .io import write_jsonl
+from .io import read_jsonl, write_jsonl
 from .models import Example
 
 
@@ -41,6 +39,14 @@ def _balanced_indices(targets: list[int], limit: int, seed: int) -> list[int]:
 
 
 def load_examples(config: BenchmarkConfig) -> list[Example]:
+    try:
+        from datasets import load_dataset
+    except ImportError as exc:
+        raise RuntimeError(
+            "dataset preparation requires the 'data' extra: "
+            "install with `pip install 'jev-benchmarks[data]'`"
+        ) from exc
+
     spec = config.raw["dataset"]
     output: list[Example] = []
     for dataset_offset, dataset_spec in enumerate(spec["datasets"]):
@@ -91,5 +97,13 @@ def load_examples(config: BenchmarkConfig) -> list[Example]:
 def prepare_manifest(config: BenchmarkConfig) -> Path:
     examples = load_examples(config)
     path = config.output_dir / "manifest.jsonl"
-    write_jsonl(path, [example.to_dict() for example in examples])
+    rows = [example.to_dict() for example in examples]
+    existing = read_jsonl(path)
+    if existing and existing != rows:
+        raise RuntimeError(
+            f"refusing to overwrite a different manifest at {path}; "
+            "use a new experiment_id/output_dir"
+        )
+    if not existing:
+        write_jsonl(path, rows)
     return path

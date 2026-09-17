@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "jev-benchmarks: probability-aware evaluation for typed decision models"
+type: software
+authors:
+  - family-names: Bakhta
+    given-names: Abdelhamid
+repository-code: "https://github.com/AbdelStark/jev-benchmarks"
+url: "https://github.com/AbdelStark/jev-benchmarks"
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-09-17
+keywords:
+  - calibration
+  - machine-learning evaluation
+  - selective classification
+  - zero-shot classification
