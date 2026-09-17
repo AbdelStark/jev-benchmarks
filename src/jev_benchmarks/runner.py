@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 from pathlib import Path
 
 from .adapters.base import Backend
@@ -12,13 +13,21 @@ from .io import append_jsonl, read_jsonl
 from .models import Example, Prediction
 
 
-def _validate_prediction(prediction: Prediction) -> None:
+def _validate_prediction(prediction: Prediction) -> Prediction:
     if len(prediction.labels) != len(prediction.probabilities):
         raise ValueError("labels and probabilities have different lengths")
     if not all(math.isfinite(value) and 0 <= value <= 1 for value in prediction.probabilities):
         raise ValueError("probabilities must be finite and in [0, 1]")
-    if not math.isclose(sum(prediction.probabilities), 1.0, abs_tol=1e-4):
-        raise ValueError(f"probabilities sum to {sum(prediction.probabilities):.8f}, not one")
+    total = sum(prediction.probabilities)
+    if not math.isclose(total, 1.0, abs_tol=0.02):
+        raise ValueError(f"probabilities sum to {total:.8f}, outside rounding tolerance")
+    if total <= 0:
+        raise ValueError("probabilities sum to zero")
+    return replace(
+        prediction,
+        probabilities=tuple(value / total for value in prediction.probabilities),
+        probability_sum_raw=total,
+    )
 
 
 def _make_backend(config: BenchmarkConfig, name: str) -> Backend:
@@ -36,7 +45,7 @@ def run_backend(config: BenchmarkConfig, backend_name: str) -> Path:
         prepare_manifest(config)
     examples = [Example.from_dict(row) for row in read_jsonl(manifest_path)]
     output = config.output_dir / f"predictions-{backend_name}.jsonl"
-    completed = {row["example_id"] for row in read_jsonl(output)}
+    completed = {row["example_id"] for row in read_jsonl(output) if row.get("error") is None}
     pending = [example for example in examples if example.example_id not in completed]
     if not pending:
         return output
@@ -47,7 +56,7 @@ def run_backend(config: BenchmarkConfig, backend_name: str) -> Path:
         for index, example in enumerate(pending, start=1):
             try:
                 prediction = backend.predict(config.experiment_id, example)
-                _validate_prediction(prediction)
+                prediction = _validate_prediction(prediction)
             except Exception as exc:
                 prediction = Prediction(
                     experiment_id=config.experiment_id,

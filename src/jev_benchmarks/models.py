@@ -38,6 +38,7 @@ class Prediction:
     probabilities: tuple[float, ...]
     latency_seconds: float
     input_tokens: int | None = None
+    probability_sum_raw: float | None = None
     error: str | None = None
 
     def to_dict(self) -> dict[str, Any]:

@@ -8,7 +8,9 @@ dependencies = [
   "datasets>=4.0,<5",
   "gliner2[local]==2.0.0",
   "numpy>=2.0,<3",
+  "protobuf>=6.0,<7",
   "pyyaml>=6.0,<7",
+  "sentencepiece>=0.2,<1",
   "typesafe-sdk==0.6.0",
 ]
 

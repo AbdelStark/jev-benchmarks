@@ -19,6 +19,7 @@ vectors.
 - paired bootstrap confidence intervals for model differences.
 
 See [`docs/PROTOCOL.md`](docs/PROTOCOL.md) for the frozen pilot design and limitations.
+The first private result is in [`results/reports/btzsc-pilot-v1.md`](results/reports/btzsc-pilot-v1.md).
 
 ## Setup
 

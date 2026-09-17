@@ -61,8 +61,9 @@ budget. Coverage is selected on the same pilot slice and is therefore descriptiv
 threshold estimate. A future confirmatory run must choose thresholds on validation data and evaluate
 them once on a disjoint test set.
 
-Paired bootstrap resampling uses 2,000 deterministic resamples. Dataset macro-averages weight each
-dataset equally. Raw example-level prediction vectors are retained locally.
+Paired, target-stratified bootstrap resampling uses 2,000 deterministic resamples so the deliberately
+balanced class composition is preserved. Dataset macro-averages weight each dataset equally. Raw
+example-level prediction vectors are retained locally.
 
 ## Controls and limitations
 

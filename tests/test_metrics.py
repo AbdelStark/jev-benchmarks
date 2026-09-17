@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from jev_benchmarks.metrics import score_predictions
+from jev_benchmarks.metrics import paired_bootstrap, score_predictions
 from jev_benchmarks.models import Prediction
 
 
@@ -49,3 +49,11 @@ def test_failures_are_explicit() -> None:
     )
     scores = score_predictions([failed])
     assert scores == {"n": 1, "valid": 0, "failures": 1}
+
+
+def test_paired_bootstrap_reports_right_minus_left() -> None:
+    left = [prediction(0, (0.6, 0.4)), prediction(1, (0.6, 0.4))]
+    right = [prediction(0, (0.9, 0.1)), prediction(1, (0.1, 0.9))]
+    result = paired_bootstrap(left, right, resamples=100, seed=7)
+    assert result["accuracy"]["difference"] == 0.5
+    assert result["brier"]["difference"] < 0
