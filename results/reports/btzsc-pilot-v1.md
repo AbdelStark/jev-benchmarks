@@ -53,8 +53,10 @@ Jev minus GLiNER2.5; positive favors Jev for accuracy/F1, while negative favors 
 - On short emotion utterances, the accuracy difference is unresolved. Jev assigned exactly zero
   probability to the true label on 16% of examples, versus 0% for GLiNER, producing severe NLL and
   calibration penalties. Mean top-label confidence was 0.819 for Jev against 0.438 for GLiNER.
-- Jev used 316,861 reported input tokens. At TypeSafe's stated $0.042 per million input tokens, the
-  implied run cost is approximately $0.0133; this is an estimate, not a billing receipt.
+- Jev's 300 retained successful predictions report 316,861 input tokens. At TypeSafe's stated $0.042
+  per million input tokens, that implies a $0.0133 lower bound. The first runner version discarded
+  usage metadata for four validation-failed calls that were retried, so total run cost is unknown but
+  slightly higher; this is not a billing receipt.
 - Latency is deployment-specific: Jev includes network service time from France, while GLiNER is
   local CPU inference. It is not a hardware-normalized throughput comparison.
 

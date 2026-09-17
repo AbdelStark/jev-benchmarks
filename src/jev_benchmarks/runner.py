@@ -54,24 +54,29 @@ def run_backend(config: BenchmarkConfig, backend_name: str) -> Path:
         if backend_name == "gliner":
             backend.warmup(pending[0])
         for index, example in enumerate(pending, start=1):
+            prediction: Prediction | None = None
             try:
                 prediction = backend.predict(config.experiment_id, example)
                 prediction = _validate_prediction(prediction)
             except Exception as exc:
-                prediction = Prediction(
-                    experiment_id=config.experiment_id,
-                    backend=backend_name,
-                    model_requested=str(config.raw["models"][backend_name]["model_id"]),
-                    model_resolved="unknown",
-                    dataset=example.dataset,
-                    example_id=example.example_id,
-                    target_index=example.target_index,
-                    predicted_index=-1,
-                    labels=example.labels,
-                    probabilities=tuple(),
-                    latency_seconds=0.0,
-                    error=f"{type(exc).__name__}: {exc}",
-                )
+                error = f"{type(exc).__name__}: {exc}"
+                if prediction is not None:
+                    prediction = replace(prediction, error=error)
+                else:
+                    prediction = Prediction(
+                        experiment_id=config.experiment_id,
+                        backend=backend_name,
+                        model_requested=str(config.raw["models"][backend_name]["model_id"]),
+                        model_resolved="unknown",
+                        dataset=example.dataset,
+                        example_id=example.example_id,
+                        target_index=example.target_index,
+                        predicted_index=-1,
+                        labels=example.labels,
+                        probabilities=tuple(),
+                        latency_seconds=0.0,
+                        error=error,
+                    )
             append_jsonl(output, prediction.to_dict())
             print(f"[{backend_name}] {index}/{len(pending)} {example.example_id}", flush=True)
     finally:
