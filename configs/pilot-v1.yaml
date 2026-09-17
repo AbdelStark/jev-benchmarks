@@ -1,0 +1,27 @@
+experiment_id: btzsc-pilot-v1
+seed: 20260917
+dataset:
+  repository: btzsc/btzsc
+  revision: fef2a2ac62b69c58670047dddf045c53d7c3cb5e
+  samples_per_dataset: 100
+  datasets:
+    - name: agnews
+      task: topic
+    - name: emotiondair
+      task: emotion
+    - name: banking77
+      task: intent
+models:
+  gliner:
+    model_id: fastino/gliner2.5-multi-v1
+    revision: 235cf92d6d4318da9bfca0d08975c8fa7250d13b
+    device: cpu
+    batch_size: 1
+  jev:
+    model_id: jev-latest
+    question: Which single label best describes the input text?
+metrics:
+  ece_bins: 10
+  error_budget: 0.05
+  bootstrap_resamples: 2000
+output_dir: results/runs/btzsc-pilot-v1

@@ -1,0 +1,44 @@
+[project]
+name = "jev-benchmarks"
+version = "0.1.0"
+description = "Reproducible evaluation infrastructure for Jev and decision-model baselines"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "datasets>=4.0,<5",
+  "gliner2[local]==2.0.0",
+  "numpy>=2.0,<3",
+  "pyyaml>=6.0,<7",
+  "typesafe-sdk==0.6.0",
+]
+
+[project.scripts]
+jev-bench = "jev_benchmarks.cli:main"
+
+[dependency-groups]
+dev = [
+  "pyright>=1.1.405",
+  "pytest>=8.4",
+  "pytest-cov>=6.2",
+  "ruff>=0.12",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "RUF"]
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+include = ["src", "tests"]
+
+[tool.pytest.ini_options]
+addopts = "-q --strict-markers"
+testpaths = ["tests"]
